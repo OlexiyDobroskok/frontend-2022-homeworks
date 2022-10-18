@@ -67,11 +67,12 @@ function changeSkin({ target }) {
 
 skinsList.addEventListener("click", changeSkin);
 
-const Enemy = function (x, y, speed) {
+const Enemy = function (x, y, speed, player) {
   this.x = x;
   this.y = y;
   this.speed = speed;
   this.sprite = "images/enemy-bug.png";
+  this.player = player;
 };
 
 Enemy.prototype.update = function (dt) {
@@ -85,13 +86,13 @@ Enemy.prototype.update = function (dt) {
 
 Enemy.prototype.collision = function () {
   if (
-    player.x < this.x + DELTA_WIDTH &&
-    player.x + DELTA_WIDTH > this.x &&
-    player.y < this.y + DELTA_HEIGH &&
-    player.y + DELTA_HEIGH > this.y
+    this.player.x < this.x + DELTA_WIDTH &&
+    this.player.x + DELTA_WIDTH > this.x &&
+    this.player.y < this.y + DELTA_HEIGH &&
+    this.player.y + DELTA_HEIGH > this.y
   ) {
-    player.x = PLAYER_START_POSITION_X;
-    player.y = PLAYER_START_POSITION_Y;
+    this.player.x = PLAYER_START_POSITION_X;
+    this.player.y = PLAYER_START_POSITION_Y;
     resetScore();
   }
 };
@@ -132,7 +133,7 @@ const player = new Player(PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y);
 
 const allEnemies = ENEMIES_START_POSITION_Y.map((yPosition) => {
   const xPosition = Math.floor(Math.random() * -200);
-  return new Enemy(xPosition, yPosition, ENEMY_START_SPEED);
+  return new Enemy(xPosition, yPosition, ENEMY_START_SPEED, player);
 });
 
 Player.prototype.handleInput = function (pressedKey) {
